@@ -8,16 +8,16 @@
   tasks:
     - name: Stage changes to feature and test files then get status
       shell: |
-        git add {{ test }}.feature {{ test }}/{{ test }}.spec.js
+        git add {{ feature_file }} {{ test_file }}
         git status -s
       args:
-        chdir: "{{ project_dir }}"
+        chdir: "{{ project_path }}"
       register: git_status
 
     - name: Commit changes if any
       shell: git commit -m "Test {{ test | replace("-", " ") }}" -m "{{ jira_url }}/browse/{{ jira_id }}"
       args:
-        chdir: "{{ project_dir }}"
+        chdir: "{{ project_path }}"
       when: "git_status.stdout != ''" 
 
     - name: Update JIRA status to "Ready to Review"
@@ -30,3 +30,4 @@
         headers:
           Authorization: "Basic {{ jira_b64_username_token }}"
           Content-Type: application/json
+      tags: ready-to-review
