@@ -1,0 +1,17 @@
+---
+# Change these values for each test
+# AI-###
+jira_id:
+# test-name-hyphenated
+test:
+
+# One time setup
+project_path: ""
+jira_b64_username_token: ""
+
+# Default
+jira_url: "https://rhc.atlassian.net"
+feature_branch: "feature/{{ jira_id }}-_-{{ test }}"
+test_directory: "{{ project_path }}/cypress/integration/{{ test }}"
+test_file: "{{ project_path }}/cypress/integration/{{ test }}/{{ test }}.spec.js"
+feature_file: "{{ project_path }}/cypress/integration/{{ test }}.feature"

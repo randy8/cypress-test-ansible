@@ -1,0 +1,32 @@
+---
+- name: Finish Cypress test
+  hosts: localhost
+
+  vars_files:
+    - setup-vars.yml
+
+  tasks:
+    - name: Stage changes to feature and test files then get status
+      shell: |
+        git add {{ test }}.feature {{ test }}/{{ test }}.spec.js
+        git status -s
+      args:
+        chdir: "{{ project_dir }}"
+      register: git_status
+
+    - name: Commit changes if any
+      shell: git commit -m "Test {{ test | replace("-", " ") }}" -m "{{ jira_url }}/browse/{{ jira_id }}"
+      args:
+        chdir: "{{ project_dir }}"
+      when: "git_status.stdout != ''" 
+
+    - name: Update JIRA status to "Ready to Review"
+      uri: 
+        url: "{{ jira_url }}/rest/api/2/issue/{{ jira_id }}/transitions"
+        method: POST
+        status_code: 204
+        body: '{"transition":{"id":"81"}}'
+        body_format: json
+        headers:
+          Authorization: "Basic {{ jira_b64_username_token }}"
+          Content-Type: application/json

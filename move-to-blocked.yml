@@ -1,0 +1,18 @@
+---
+- name: Move JIRA story to blocked
+  hosts: localhost
+
+  vars_files:
+    - setup-vars.yml
+
+  tasks:
+    - name: Update JIRA status to "Blocked"
+      uri:
+        url: "{{ jira_url }}/rest/api/2/issue/{{ jira_id }}/transitions"
+        method: POST
+        status_code: 204
+        body: '{"transition":{"id":"51"}}' 
+        body_format: json
+        headers:
+          Authorization: "Basic {{ jira_b64_username_token }}"
+          Content-Type: application/json

@@ -1,0 +1,87 @@
+---
+- name: Setup Cypress test
+  hosts: localhost
+
+  vars_files:
+    - setup-vars.yml
+
+  tasks:
+    - name: Update JIRA status to "In Progress"
+      uri:
+        url: "{{ jira_url }}/rest/api/2/issue/{{ jira_id }}/transitions"
+        method: POST
+        status_code: 204
+        body: '{"transition":{"id":"21"}}' 
+        body_format: json
+        headers:
+          Authorization: "Basic {{ jira_b64_username_token }}"
+          Content-Type: application/json
+
+    - name: Create new branch off master
+      shell: |
+        git checkout master
+        git pull
+        git checkout -b {{ feature_branch }}
+      args:
+        chdir: "{{ project_path }}"
+      ignore_errors: yes
+
+    - name: Create test directory
+      file:
+        path: "{{ test_directory }}"
+        state: directory
+
+    - name: Create test file
+      file:
+        path: "{{ test_file }}"
+        state: touch
+
+    - name: Add skeleton code
+      blockinfile:
+        path: "{{ test_file }}"
+        block: |
+          import { Given, When, And, Then } from "cypress-cucumber-preprocessor/steps";
+
+          /// <reference types="cypress" />
+
+          describe("", () => {
+            Given("", () => {
+            });
+
+            // And("", () => {
+            // });            
+
+            When("", () => {
+
+            });
+
+            // And("", () => {
+            // });
+
+            Then("", () => {
+            });
+          });          
+
+    - name: Remove default marker
+      lineinfile:
+        path: "{{ test_file }}"
+        state: absent
+        regexp: '^.*BLOCK.*$'
+
+    - name: Create feature file
+      file:
+        path: "{{ feature_file }}"  
+        state: touch
+
+    - name: Add reference to docs
+      blockinfile:
+        path: "{{ feature_file }}" 
+        block: |
+          # Docs:
+          # https://www.npmjs.com/package/cypress-cucumber-preprocessor
+
+    - name: Remove default marker
+      lineinfile :
+        path: "{{ feature_file }}" 
+        state: absent
+        regexp: '^.*BLOCK.*$'  

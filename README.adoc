@@ -1,0 +1,78 @@
+Cypress Test Setup
+==================
+
+Synopsis
+--------
+Automating JIRA status changes, Git commits, and file generation. 
+
+Create an API Token
+~~~~~~~~~~~~~~~~~~~
+- Log into JIRA and go to `Account Settings` > `Security` > `Create and manage API tokens`
+  (or visit https://id.atlassian.com/manage-profile/security/api-tokens)
+- Click on `Create an API token`
+    
+    NOTE: You are only presented this token once; be sure to save it somewhere.
+  
+Update Vars in `setup-vars.yml`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Initial setup:
+
+* `jira_b64_username_token`: $(echo -n <user>@redhat.com:<jira_token> | base64)
+* `project_path`: <pwd where your project is located>
+
+The only ones that need to be updated every time are:
+
+* `jira_id`: <AI-#> 
+* `test`: <test-name-hyphenated> 
+
+Setup Test
+~~~~~~~~~~
+    ansible-playbook setup-test.yml 
+
+* Updates the JIRA status from `Ready` to `In Progress`
+* Creates a feature branch (with the proper naming convention) off of `master`
+* Generates files and populates them with skeleton code/documentation
+
+Finish Test
+~~~~~~~~~~~
+    ansible-playbook finish-test.yml
+
+* Stages the changes to the test/feature files if any are made and commits them
+* Updates JIRA status from `In Progress` to `Ready to Review`
+
+    NOTE: You will need to manually push your changes.
+
+Transition IDs for Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    {
+        "transitions": [
+            {
+                "id": "21",
+                "name": "In Progress",
+            },
+            {
+                "id": "31",
+                "name": "Done",
+            },
+            {
+                "id": "41",
+                "name": "ToDo",
+            },
+            {
+                "id": "51",
+                "name": "Blocked",
+            },
+            {
+                "id": "61",
+                "name": "Ready To Demo",
+            },
+            {
+                "id": "71",
+                "name": "Ready",
+            },
+            {
+                "id": "81",
+                "name": "Ready To Review",
+            }
+        ]
+    }
