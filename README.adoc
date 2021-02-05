@@ -27,7 +27,7 @@ The only ones that need to be updated every time are:
 
 Setup Test
 ~~~~~~~~~~
-    ansible-playbook setup-test.yml 
+    $ ansible-playbook setup-test.yml 
 
 * Updates the JIRA status from `Ready` to `In Progress`
 * Creates a feature branch (with the proper naming convention) off of `master`
@@ -35,12 +35,12 @@ Setup Test
 
 Finish Test
 ~~~~~~~~~~~
-    ansible-playbook finish-test.yml
+    $ ansible-playbook finish-test.yml
 
 * Stages the changes to the test/feature files if any are made and commits them
 * Updates JIRA status from `In Progress` to `Ready to Review`
 
-    NOTE: You will need to manually push your changes.
+    NOTE: You will need to manually push your changes (for now). Once you've done so, create a merge request and add it as a comment in the corresponding JIRA story.
 
 Transition IDs for Reference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,3 +76,18 @@ Transition IDs for Reference
             }
         ]
     }
+
+Ideas/TODO
+~~~~~~~~~~
+
+* Arguably more trouble than it's worth/goes against best practices (in `finish-test.yml`):
+    
+    ** Automate pushing to Git and creating a merge request 
+    
+    $ git push --set-upstream origin {{ feature_branch }} --no-verify -o merge_request.create -o merge_request.target=master
+    
+    ** Grab the merge request URL and add it as a comment in the JIRA story with another POST request
+
+* Have the user override the JIRA id in a separate playbook for moving cards 
+* Add more descriptive prerequisites for when to run a playbook and when not to (i.e. if a certain action has already been done) in the README
+    
