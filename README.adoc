@@ -1,40 +1,36 @@
-Cypress Test Setup
-==================
+= Cypress Test Setup
+:toc:
 
-Synopsis
---------
+== Synopsis
 Automating JIRA status changes, Git commits, and file generation. 
 
-Create an API Token
-~~~~~~~~~~~~~~~~~~~
+== Create an API Token
 - Log into JIRA and go to `Account Settings` > `Security` > `Create and manage API tokens`
   (or visit https://id.atlassian.com/manage-profile/security/api-tokens)
 - Click on `Create an API token`
     
     NOTE: You are only presented this token once; be sure to save it somewhere.
-  
-Update Vars in `setup-vars.yml`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Initial setup:
+
+== Ansible Automation
+=== Update Vars in `setup-vars.yml`
+==== Initial setup:
 
 * `jira_b64_username_token`: $(echo -n <user>@redhat.com:<jira_token> | base64)
 * `project_path`: $(pwd) <at the top level of the project containing the Cypress tests>
 
-The only ones that need to be updated every time are:
+==== The only vars that need to be updated every time are:
 
 * `jira_id`: <AI-#> 
 * `test`: <all-lowercase-hyphenated-test-name> 
 
-Setup Test
-~~~~~~~~~~
+=== Setup Test
     $ ansible-playbook setup-test.yml 
 
 * Updates the JIRA status from `Ready` to `In Progress`
 * Creates a feature branch (with the proper naming convention) off of `master`
 * Generates files and populates them with skeleton code/documentation
 
-Finish Test
-~~~~~~~~~~~
+=== Finish Test
     $ ansible-playbook finish-test.yml
 
 * Stages the changes to the test/feature files if any are made and commits them
@@ -42,8 +38,7 @@ Finish Test
 
     NOTE: You will need to manually push your changes (for now). Once you've done so, create a merge request and add it as a comment in the corresponding JIRA story.
 
-Transition IDs for Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+== Transition IDs for Reference
     {
         "transitions": [
             {
@@ -77,8 +72,7 @@ Transition IDs for Reference
         ]
     }
 
-Ideas/TODO
-~~~~~~~~~~
+== Ideas/TODO
 
 * Arguably more trouble than it's worth/goes against best practices (in `finish-test.yml`):
     
