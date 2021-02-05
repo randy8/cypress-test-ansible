@@ -18,12 +18,12 @@ Update Vars in `setup-vars.yml`
 Initial setup:
 
 * `jira_b64_username_token`: $(echo -n <user>@redhat.com:<jira_token> | base64)
-* `project_path`: <pwd where your project is located>
+* `project_path`: $(pwd) <at the top level of the project containing the Cypress tests>
 
 The only ones that need to be updated every time are:
 
 * `jira_id`: <AI-#> 
-* `test`: <test-name-hyphenated> 
+* `test`: <all-lowercase-hyphenated-test-name> 
 
 Setup Test
 ~~~~~~~~~~

@@ -1,13 +1,17 @@
 ---
 # Change these values for each test
+# <AI-###>
 jira_id: 
+# <all-lowercase-hyphenated-test-name>
 test: 
 
 # One time setup
+# $(pwd) <at the top level of the project containing the Cypress tests>
 project_path: ""
+# $(echo -n <user>@redhat.com:<jira_token> | base64)
 jira_b64_username_token: ""
 
-# Default
+# Default values
 jira_url: "https://rhc.atlassian.net"
 feature_branch: "feature/{{ jira_id }}-_-{{ test }}"
 integration_dir: "{{ project_path }}/cypress/integration"
