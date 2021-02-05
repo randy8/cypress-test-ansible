@@ -28,7 +28,7 @@
 
     - name: Create test directory
       file:
-        path: "{{ test_directory }}"
+        path: "{{ test_dir }}"
         state: directory
 
     - name: Create test file
@@ -36,7 +36,7 @@
         path: "{{ test_file }}"
         state: touch
 
-    - name: Add skeleton code
+    - name: Add scaffold to test file
       blockinfile:
         path: "{{ test_file }}"
         block: |
@@ -46,9 +46,11 @@
 
           describe("", () => {
             Given("", () => {
+
             });
 
             // And("", () => {
+            //
             // });            
 
             When("", () => {
@@ -56,9 +58,11 @@
             });
 
             // And("", () => {
+            //
             // });
 
             Then("", () => {
+
             });
           });          
 
@@ -73,7 +77,7 @@
         path: "{{ feature_file }}"  
         state: touch
 
-    - name: Add reference to docs
+    - name: Add reference to docs to feature file
       blockinfile:
         path: "{{ feature_file }}" 
         block: |
